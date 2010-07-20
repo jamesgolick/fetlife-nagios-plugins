@@ -5,14 +5,14 @@ require "resque"
 require "optparse"
 
 options  = {}
-required = [:warning, :critical, :host]
+required = [:warning, :critical, :host, :queues]
 
 parser   = OptionParser.new do |opts|
   opts.banner = "Usage: check_nrpe [options]"
   opts.on("-h", "--host redishost", "The hostname of the redis server") do |h|
     options[:host] = h
   end
-  opts.on("-q", "--queues queue,queue,queue", "The queues to check (comma separated)") do |q|
+  opts.on("-q", "--queues low,medium,high", "The queues to check (comma separated)") do |q|
     options[:queues] = q
   end
   opts.on("-w", "--warning percentage", "Warning threshold") do |w|
