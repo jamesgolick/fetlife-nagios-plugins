@@ -5,4 +5,6 @@ Some nagios plugins we're using at FetLife.
 
 Services include:
   
-  * Resque - Monitor resque queue sizes to get alerted if queues are backing up.
+  * Resque 
+    * check_resque: Monitor resque queue sizes to get alerted if queues are backing up.
+    * check_resque_failed: Monitor the number of failures in the queue.
