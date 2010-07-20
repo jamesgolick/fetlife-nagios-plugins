@@ -1,0 +1,37 @@
+#!/usr/bin/env ruby
+
+require "rubygems"
+require "cassandra"
+require "optparse"
+require "benchmark"
+
+options  = {}
+required = [:host, :keyspace]
+
+parser   = OptionParser.new do |opts|
+  opts.banner = "Usage: check_cassandra [options]"
+  opts.on("-h", "--host cassandrahost:port", "The hostname and port of the cassandra server.") do |h|
+    options[:host] = h
+  end
+  opts.on("-k", "--keyspace keyspace", "The keyspace to connect to.") do |k|
+    options[:keyspace] = k
+  end
+
+  opts.on("-cf", "--columnfamily cf", "The column family to query.") do |cf|
+    options[:cf] = cf
+  end
+end
+parser.parse!
+
+if !required.all? { |k| options.has_key?(k) }
+  abort parser.to_s
+else
+  begin
+    cassandra = Cassandra.new(options[:keyspace], options[:host])
+    b = Benchmark.measure { cassandra.get(options[:cf], "a") }
+    puts "OK - #{b.real}"
+  rescue StandardError => e
+    puts "CRITICAL - #{e.to_s}"
+    exit(2)
+  end
+end
